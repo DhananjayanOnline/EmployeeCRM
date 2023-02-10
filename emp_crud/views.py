@@ -46,7 +46,7 @@ class Update_emp_view(UpdateView):
     success_url = reverse_lazy('home')
 
 class Detail_emp_view(DetailView):
-    template_name = 'emp_details.html'
+    template_name = 'index.html'
     model = Employee
     context_object_name = 'emp'
 
