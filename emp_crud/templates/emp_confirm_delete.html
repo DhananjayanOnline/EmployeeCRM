@@ -1,0 +1,7 @@
+<p>Are you sure do you really want to delete this employee {{emp.name}}?</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+
+    <input type="submit" value="delete">
+</form>

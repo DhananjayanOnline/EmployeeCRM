@@ -7,10 +7,14 @@ from django.contrib.auth.models import User
 class Admin_creation_form(UserCreationForm):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['username', 'password1', 'password2', 'is_superuser']
+
+class Admin_login_form(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField()
 
 
-class Employee_form(forms.MpdelForm):
+class Employee_form(forms.ModelForm):
     
     class Meta:
         model = Employee

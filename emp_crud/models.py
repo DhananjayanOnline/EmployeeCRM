@@ -7,7 +7,7 @@ class Employee(models.Model):
     address = models.CharField(max_length=200)
     emp_start_date = models.DateField(auto_now_add=True)
     emp_end_date = models.DateField()
-    photo = models.ImageField(upload_to='static/images')
+    photo = models.ImageField(upload_to='media/images')
     options = (
         ('working', 'working'),
         ('resigned', 'resigned')

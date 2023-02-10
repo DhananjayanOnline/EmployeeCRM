@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <img src="{{emp.photo.url}}"  width="10%" alt="">
+    <p>{{emp.name}}</p>
+    <p>{{emp.address}}</p>
+    <p>{{emp.emp_start_date}}</p>
+    <p>{{emp.emp_end_date}}</p>
+    <p>{{emp.status}}</p>
+    
+    <a href="{% url 'update' emp.id %}" class="btn btn-outline-info btn-sm">edit</a>
+    <a href="{% url 'delete' emp.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+</body>
+</html>
