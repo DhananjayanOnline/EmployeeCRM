@@ -39,14 +39,23 @@ class Index_view(CreateView, ListView):
     success_url = reverse_lazy('home')
     context_object_name = 'employees'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["emp_count"] = Employee.objects.all().count()
+        context["pro_dept_count"] = Employee.objects.filter(department="Product development").count()
+        context["sales_dept_count"] = Employee.objects.filter(department="Sales and marketing").count()
+        context["salary_sum"] = Employee.get_salary_sum()
+        return context
+    
+
 class Update_emp_view(UpdateView):
-    template_name = 'index.html'
+    template_name = 'update.html'
     form_class = Employee_form
     model = Employee
     success_url = reverse_lazy('home')
 
 class Detail_emp_view(DetailView):
-    template_name = 'index.html'
+    template_name = 'emp_details.html'
     model = Employee
     context_object_name = 'emp'
 

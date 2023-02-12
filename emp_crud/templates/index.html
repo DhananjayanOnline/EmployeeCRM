@@ -21,8 +21,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Earnings (Monthly)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                Total Employees</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{emp_count}}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -39,8 +39,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Earnings (Annual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                               Product Department</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{pro_dept_count}}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -56,18 +56,11 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sales Department
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2">
-                                        <div class="progress-bar bg-info" role="progressbar"
-                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
-                                    </div>
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{sales_dept_count}}</div>
                                 </div>
                             </div>
                         </div>
@@ -86,8 +79,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                Total Salary giving to Employees</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{salary_sum}}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -105,8 +98,39 @@
         <!-- Area Chart -->
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
-                <div class="card-header py-3">
+                <div class="card-header py-3 d-flex justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                    <button type="button" class="btn btn-primary " data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                        Add new employee
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create New Employee</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+
+                                        {{form.as_p}}
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <input type="submit" class="btn btn-primary" value="Submit">
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -116,7 +140,6 @@
                                     <th></th>
                                     <th>Name</th>
                                     <th>Department</th>
-                                    <th>Position</th>
                                     <th>Start date</th>
                                     <th>End date</th>
                                     <th>Salary</th>
@@ -128,7 +151,6 @@
                                     <th>photo</th>
                                     <th>Name</th>
                                     <th>Department</th>
-                                    <th>Position</th>
                                     <th>Start date</th>
                                     <th>End date</th>
                                     <th>Salary</th>
@@ -138,14 +160,16 @@
                             <tbody>
                                 {% for emp in employees%}
                                 <tr>
-                                    <td id="emp_photo"><img src="{{emp.photo.url}}" width="100%" alt=""></td>
-                                    <td id="emp_name">{{emp.name}}</td>
-                                    <td id="emp_dept">{{emp.department}}</td>
-                                    <td id="emp_pos">{{emp.position}}</td>
-                                    <td id="emp_sd">{{emp.emp_start_date}}</td>
-                                    <td id="emp_ed">{{emp.emp_end_date}}</td>
-                                    <td id="emp_salary">{{emp.salary}}</td>
-                                    <td><button" id="view-subdetail" onclick="addEmployee()" class="btn btn-outline-success btn-sm">view</button></td>
+                                    <td id="emp_photo{{emp.id}}"><img src="{{emp.photo.url}}" width="100%" alt=""></td>
+                                    <td id="emp_name{{emp.id}}">{{emp.name}}</td>
+                                    <td id="emp_dept{{emp.id}}">{{emp.department}}</td>
+                                    <td id="emp_sd{{emp.id}}">{{emp.emp_start_date}}</td>
+                                    <td id="emp_ed{{emp.id}}">{{emp.emp_end_date}}</td>
+                                    <td id="emp_salary{{emp.id}}">{{emp.salary}}</td>
+                                    <td>
+                                        <button" id="view-subdetail" data-id="{{emp.id}}" onclick="addEmployee(event)"
+                                            class="btn btn-outline-success btn-sm">view</button>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -157,12 +181,12 @@
 
         <!-- Pie Chart -->
         <div class="col-xl-4 col-lg-5" id="employee-subdetail">
-            
+
         </div>
     </div>
 
     <!-- Content Row -->
-    
+
 
 </div>
 
@@ -185,12 +209,14 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h2>home</h2>
 
@@ -203,16 +229,17 @@
     </form>
 
 
-        {% for emp in employees %}
-            
-            <img src="{{emp.photo.url}}"  width="10%" alt="">
-            <p>{{emp.name}}</p>
-            <p>{{emp.address}}</p>
-            <p>{{emp.emp_start_date}}</p>
-            <p>{{emp.emp_end_date}}</p>
-            <p>{{emp.status}}</p>
-            <a href="{% url 'details' emp.id %}" class="btn btn-outline-success btn-sm">view</a>
-        {% endfor %}
+    {% for emp in employees %}
+
+    <img src="{{emp.photo.url}}" width="10%" alt="">
+    <p>{{emp.name}}</p>
+    <p>{{emp.address}}</p>
+    <p>{{emp.emp_start_date}}</p>
+    <p>{{emp.emp_end_date}}</p>
+    <p>{{emp.status}}</p>
+    <a href="{% url 'details' emp.id %}" class="btn btn-outline-success btn-sm">view</a>
+    {% endfor %}
 
 </body>
+
 </html>

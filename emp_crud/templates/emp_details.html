@@ -1,20 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <img src="{{emp.photo.url}}"  width="10%" alt="">
-    <p>{{emp.name}}</p>
-    <p>{{emp.address}}</p>
-    <p>{{emp.emp_start_date}}</p>
-    <p>{{emp.emp_end_date}}</p>
-    <p>{{emp.status}}</p>
-    
-    <a href="{% url 'update' emp.id %}" class="btn btn-outline-info btn-sm">edit</a>
-    <a href="{% url 'delete' emp.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="row" style="width: 95%; margin-left: 0; margin-right: 0;">
+
+    <!-- Pie Chart -->
+    <div class="col-xl-4 col-lg-5 ">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Profile</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <img src="{{emp.photo.url}}" width="100%" alt="">
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                <div class="btn-group" style="width: 100%;" role="group" aria-label="Basic mixed styles example">
+                    <a href="{% url 'update' emp.id %}" class="btn btn-info btn-sm ">Edit</a>
+                    <a href="{% url 'delete' emp.id %}" class="btn btn-danger btn-sm ">Delete</a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Area Chart -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Overview</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body text-center">
+                <p style="font-size: xx-large; ">{{emp.name}}</p>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                <p>Address : {{emp.address}}</p>
+                <p>Age :{{emp.age}}</p>
+                <p>Department :{{emp.department}}</p>
+                <p>Salary :{{emp.salary}}</p>
+                <p>Status :{{emp.status}}</p>
+                <p>Start Date :{{emp.emp_start_date}}</p>
+                <p>End Date :{{emp.emp_end_date}}</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock content %}
