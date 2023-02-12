@@ -19,7 +19,7 @@ class Employee(models.Model):
     )
     department = models.CharField(max_length=200, choices=depts, default=None)
     emp_start_date = models.DateField(null=True, blank=True)
-    emp_end_date = models.DateField()
+    emp_end_date = models.DateField(null=True, blank=True)
     salary = models.PositiveIntegerField()
     photo = models.ImageField(upload_to='media/images')
     options = (

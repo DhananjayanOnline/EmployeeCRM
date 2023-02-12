@@ -160,7 +160,7 @@
                             <tbody>
                                 {% for emp in employees%}
                                 <tr>
-                                    <td id="emp_photo{{emp.id}}"><img src="{{emp.photo.url}}" width="100%" alt=""></td>
+                                    <td id="emp_photo{{emp.id}}"><img src="{{emp.photo.url}}" width="100%" height="70%" style="object-fit: contain;" alt=""></td>
                                     <td id="emp_name{{emp.id}}">{{emp.name}}</td>
                                     <td id="emp_dept{{emp.id}}">{{emp.department}}</td>
                                     <td id="emp_sd{{emp.id}}">{{emp.emp_start_date}}</td>

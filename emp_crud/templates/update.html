@@ -2,12 +2,24 @@
 
 {% block content %}
 
-<form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <div class="card border-0 shadow-sm p-3">
+            <h2 class="text-center">Update Employee Profile</h2>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+            
+                {{form.as_p}}
+            
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        
+    </div>
+    <div class="col-2"></div>
+</div>
 
-    {{form.as_p}}
 
-    <input type="submit" value="Submit">
-</form>
 
 {% endblock content %}

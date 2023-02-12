@@ -24,12 +24,12 @@ function addEmployee(event){
     
     <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
-        <div>
+        <div class="mt-3">
             ${photo}
         </div>
         <!-- Card Body -->
-        <div class="card-body">
-            <div class="mt-4 text-left">
+        <div class="card-body" style="margin-top: -6em">
+            <div class=" text-left">
                 <p class="mr-2">
                     <i class="fas fa-circle text-primary"></i> <span class="">Name : ${name}</span>
                 </p>

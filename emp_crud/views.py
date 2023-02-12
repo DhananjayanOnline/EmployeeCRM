@@ -38,6 +38,8 @@ class Index_view(CreateView, ListView):
     model = Employee
     success_url = reverse_lazy('home')
     context_object_name = 'employees'
+    object_list  = Employee.objects.all()
+    queryset = Employee.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
