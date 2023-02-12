@@ -3,19 +3,19 @@ let employeeDiv = document.querySelector('#employee-subdetail');
 
 
 
-function addEmployee(event){
+function addEmployee(event) {
     let id = event.target.getAttribute('data-id');
 
-    let getPhoto = document.querySelector('#emp_photo'+id);
+    let getPhoto = document.querySelector('#emp_photo' + id);
     let photo = getPhoto.innerHTML;
 
-    let getName = document.querySelector('#emp_name'+id);
+    let getName = document.querySelector('#emp_name' + id);
     let name = getName.textContent;
 
-    let getDept = document.querySelector('#emp_dept'+id);
+    let getDept = document.querySelector('#emp_dept' + id);
     let dept = getDept.textContent;
-    
-    let getSd = document.querySelector('#emp_sd'+id);
+
+    let getSd = document.querySelector('#emp_sd' + id);
     let sd = getSd.textContent;
 
     employeeDiv.innerHTML = "";
@@ -42,7 +42,7 @@ function addEmployee(event){
 
                 
             </div>
-            <a href="emp/${id}" class="btn btn-primary form-control">view profile</a>
+            <a href="emp/${id}" class="btn btn-info form-control">view profile</a>
         </div>
     </div>
 
