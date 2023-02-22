@@ -1,5 +1,5 @@
 from django import forms
-from .models import Employee
+from .models import Employee, Exprerience
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -40,3 +40,13 @@ class Employee_form(forms.ModelForm):
         }
 
 
+class Exprerience_form(forms.ModelForm):
+    class Meta:
+        model = Exprerience
+        fields = "__all__"
+
+        widgets = {
+            "domain": forms.TextInput(attrs={"class":"form-control"}),
+            "years_of_expre": forms.NumberInput(attrs={"class":"form-control"}),
+            "description": forms.Textarea(attrs={"class":"form-control","rows": 2}),
+        }

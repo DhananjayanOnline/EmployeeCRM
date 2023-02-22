@@ -31,3 +31,13 @@ class Employee(models.Model):
     @classmethod
     def get_salary_sum(cls):
         return cls.objects.aggregate(Sum('salary'))['salary__sum']
+
+
+class Exprerience(models.Model):
+    emp_id = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    domain = models.CharField(max_length=200)
+    years_of_expre = models.IntegerField()
+    description = models.TextField(max_length=400)
+
+    def __self__(self):
+        return self.emp_id.name

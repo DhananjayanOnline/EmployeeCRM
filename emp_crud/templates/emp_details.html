@@ -21,7 +21,7 @@
                     <a href="{% url 'update' emp.id %}" class="btn btn-info btn-sm ">Edit</a>
                     <a href="{% url 'delete' emp.id %}" class="btn btn-danger btn-sm ">Delete</a>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -45,6 +45,33 @@
                 <p>Status :{{emp.status}}</p>
                 <p>Start Date :{{emp.emp_start_date}}</p>
                 <p>End Date :{{emp.emp_end_date}}</p>
+                <a href="{% url 'addexp' emp.id %}" class="btn btn-info btn-sm ">Add experience</a>
+
+                <center>
+                <table class="text-center">
+                    <tr>
+                        <th>Domain</th>
+                        <th>Years of experience</th>
+                        <th>Description
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+
+                    {% for exp in exp_list %}
+
+                    <tr>
+                        <td>{{exp.domain}}</td>
+                        <td>{{exp.years_of_expre}}</td>
+                        <td>{{exp.description}}</td>
+                        <td><a href="{% url 'update-exp' exp.id %}" class="btn btn-outline-info btn-sm ">Edit</a></td>
+                        <td><a href="{% url 'delete-exp' exp.id %}" class="btn btn-outline-danger btn-sm ">Delete</a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </table>
+            </center>
             </div>
         </div>
     </div>
