@@ -165,8 +165,8 @@
                             <tbody>
                                 {% for emp in employees%}
                                 <tr>
-                                    <td id="emp_photo{{emp.id}}"><img src="{{emp.photo.url}}" width="100%" height="70%"  style="object-fit: contain;" alt=""></td>
-                                    <td id="emp_name{{emp.id}}">{{emp.name}}</td>
+                                    <td id="emp_photo{{emp.id}}"><img src="{{emp.imageURL}}" width="100%" height="70%"  style="object-fit: contain;" alt=""></td>
+                                    <td id="emp_name{{emp.id}}">{{emp.username}}</td>
                                     <td id="emp_dept{{emp.id}}">{{emp.department}}</td>
                                     <td id="emp_sd{{emp.id}}">{{emp.emp_start_date}}</td>
                                     <td id="emp_ed{{emp.id}}">{{emp.emp_end_date}}</td>
@@ -179,6 +179,24 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+
+                        dafdf
+
+                        <div>
+                            <span>
+                                {% if employee.has_previous %}
+                                <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+                                {% endif %}
+
+                                <span>{{page_obj.number}}</span>
+
+                                {% if employee.has_next %}
+                                <a href="?page={{page_obj.next_page_number}}">Next</a>
+                                {% endif %}
+
+                            </span>
+                        </div>
+
                     </div>
                 </div>
             </div>

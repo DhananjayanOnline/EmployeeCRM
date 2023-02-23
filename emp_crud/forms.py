@@ -7,17 +7,32 @@ from django.contrib.auth.models import User
 class Admin_creation_form(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'password1', 'password2','is_superuser']
 
         widgets = {
             "username": forms.TextInput(attrs={"class": "form-control"}),
             "password1": forms.PasswordInput(attrs={"class": "form-control"}),
             "password2": forms.PasswordInput(attrs={"class": "form-control"}),
+            "is_superuser": forms.CheckboxInput(attrs={"class": "form-control"}),
         }
 
 class Admin_login_form(forms.Form):
     username = forms.CharField()
     password = forms.CharField()
+
+
+
+class Employee_creation_form(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2', 'is_staff']
+
+    widgets = {
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "password1": forms.PasswordInput(attrs={"class": "form-control"}),
+            "password2": forms.PasswordInput(attrs={"class": "form-control"}),
+            "is_staff": forms.CheckboxInput(attrs={"class": "form-control"}),
+        }
 
 
 class Employee_form(forms.ModelForm):

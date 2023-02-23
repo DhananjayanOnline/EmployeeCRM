@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Employee, Exprerience
-from .forms import Admin_creation_form, Admin_login_form, Employee_form, Exprerience_form
+from .forms import Admin_creation_form, Admin_login_form, Employee_form, Exprerience_form, Employee_creation_form
 from django.views.generic import CreateView, FormView, TemplateView, ListView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
@@ -8,10 +8,17 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
 from django.forms import inlineformset_factory
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from io import BytesIO
 from reportlab.pdfgen import canvas
+
+import xlwt
+
+from django.core.paginator import Paginator
+
 
 # Create your views here.
 
@@ -53,14 +60,24 @@ class Login_view(FormView):
 
 
 @method_decorator(decs, name="dispatch")
-class Index_view(CreateView, ListView):
+class Index_view(CreateView, ListView, UserPassesTestMixin):
     template_name = 'index.html'
-    form_class = Employee_form
-    model = Employee
+    form_class = Employee_creation_form
     success_url = reverse_lazy('home')
     context_object_name = 'employees'
     object_list  = Employee.objects.all()
     queryset = Employee.objects.all()
+    paginate_by = 2
+    
+    def form_valid(self, form):
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+
+        Employee.objects.create(username=username, password=password)
+
+        user = form.save(commit=False)
+        user.save()
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -69,6 +86,18 @@ class Index_view(CreateView, ListView):
         context["sales_dept_count"] = Employee.objects.filter(department="Sales and marketing").count()
         context["salary_sum"] = Employee.get_salary_sum()
         return context
+
+
+    def test_func(self):
+        # Check if the user is a superuser or a staff member
+        return self.request.user.is_superuser
+
+    def handle_no_permission(self):
+
+        # Redirect to the login page if the user doesn't have the required permission
+        return redirect('details')
+
+    
     
 
 @method_decorator(decs, name="dispatch")
@@ -106,43 +135,74 @@ def logout_view(request, *args, **kwargs):
 
 
 decs
-def generate_pdf_view(request):
-    # Retrieve the data from your model
-    data = Employee.objects.all()
+# def generate_pdf_view(request):
+#     # Retrieve the data from your model
+#     data = Employee.objects.all()
 
-    # Create a BytesIO object
-    buffer = BytesIO()
+#     # Create a BytesIO object
+#     buffer = BytesIO()
 
-    # Create the PDF object
-    pdf = canvas.Canvas(buffer)
+#     # Create the PDF object
+#     pdf = canvas.Canvas(buffer)
 
-    # Write the table header
-    pdf.drawString(10, 800, "Name")
-    pdf.drawString(100, 800, "age")
-    pdf.drawString(200, 800, "department")
-    pdf.drawString(350, 800, "emp_start_date")
-    pdf.drawString(500, 800, "emp_end_date")
+#     # Write the table header
+#     pdf.drawString(10, 800, "Name")
+#     pdf.drawString(100, 800, "age")
+#     pdf.drawString(200, 800, "department")
+#     pdf.drawString(350, 800, "emp_start_date")
+#     pdf.drawString(500, 800, "emp_end_date")
 
-    # Write the table data
-    y = 790
-    for record in data:
-        pdf.drawString(10, y, str(record.name))
-        pdf.drawString(100, y, str(record.age))
-        pdf.drawString(200, y, str(record.department))
-        pdf.drawString(350, y, str(record.emp_start_date))
-        pdf.drawString(500, y, str(record.emp_end_date))
-        y = y - 20
+#     # Write the table data
+#     y = 790
+#     for record in data:
+#         pdf.drawString(10, y, str(record.name))
+#         pdf.drawString(100, y, str(record.age))
+#         pdf.drawString(200, y, str(record.department))
+#         pdf.drawString(350, y, str(record.emp_start_date))
+#         pdf.drawString(500, y, str(record.emp_end_date))
+#         y = y - 20
 
-    # Save the PDF
-    pdf.save()
+#     # Save the PDF
+#     pdf.save()
 
-    # Create a FileResponse object with the PDF data
-    buffer.seek(0)
-    response = FileResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="table.pdf"'
+#     # Create a FileResponse object with the PDF data
+#     buffer.seek(0)
+#     response = FileResponse(buffer, content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="table.pdf"'
+
+#     return response
+
+
+def export_users_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="users.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Name', 'Usernme', 'Address', 'Age', 'Department', 'Start Date', 'End Date', 'Salary', 'Status']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column 
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = Employee.objects.all().values_list('name', 'username', 'address', 'age', 'department', 'emp_start_date', 'emp_end_date', 'salary', 'status')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
 
     return response
-
 
 
 def add_exprerience(request, pk):
