@@ -2,6 +2,12 @@
 
 {% block content %}
 
+<style>
+    .hidden{
+        display: none;
+    }
+</style>
+
 <div class="row">
     <div class="col-2"></div>
     <div class="col-8">
@@ -9,13 +15,23 @@
             <h2 class="text-center">Update Employee Profile</h2>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+
+
                 {{ formset.management_form }}
 
-                {% for form in formset %}
-                {{form}}
-                <hr>
-                {% endfor %}
-            
+
+                <div id="experience-form-list">
+                    {% for form in formset %}
+                        <div class="experience-form">
+                            {{form.as_p}}
+                        </div>
+                        <hr>
+                    {% endfor %}
+                </div>
+
+                <div id="empty-form" class="hidden">{{ formset.empty_form.as_p }}</div>
+                <button id="add-more" type="button">Add more</button>
+
                 <input type="submit" value="Submit">
             </form>
         </div>
@@ -23,6 +39,35 @@
     </div>
     <div class="col-2"></div>
 </div>
+
+<script>
+    const addMoreBtn = document.getElementById('add-more')
+    const totalNewForms = document.getElementById('id_exprerience_set-TOTAL_FORMS')
+
+    addMoreBtn.addEventListener('click', add_new_form)
+
+    function add_new_form(event){
+        if(event){
+            event.preventDefault()
+        }
+
+        const currentExperienceForms = document.getElementsByClassName('experience-form')
+
+        let currentFormCount = currentExperienceForms.length // + 1
+        const formCopyTarget = document.getElementById('experience-form-list')
+        const copyEmptyFromEl = document.getElementById('empty-form').cloneNode(true)
+        copyEmptyFromEl.setAttribute('class', 'experience-form')
+        copyEmptyFromEl.setAttribute('id', `form-${currentFormCount}`)
+
+        const regex = new RegExp('__prefix__', 'g')
+        copyEmptyFromEl.innerHTML = copyEmptyFromEl.innerHTML.replace(regex, currentFormCount)
+        totalNewForms.setAttribute('value', currentFormCount + 1)
+
+        formCopyTarget.append(copyEmptyFromEl)
+    }
+
+
+</script>
 
 
 

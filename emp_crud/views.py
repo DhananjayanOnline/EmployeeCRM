@@ -87,8 +87,9 @@ class Detail_emp_view(DetailView):
 
     def get_context_data(self, **kwargs):
         user = Employee.objects.get(id=self.request.user.id)
+        usr = self.kwargs['pk']
         context = super().get_context_data(**kwargs)
-        context["exp_list"] = Exprerience.objects.filter(emp_id=user)
+        context["exp_list"] = Exprerience.objects.filter(emp_id=usr)
         return context
 
 
@@ -145,7 +146,7 @@ def generate_pdf_view(request):
 
 
 def add_exprerience(request, pk):
-    EmployeeFormSet = inlineformset_factory(Employee, Exprerience, fields=('domain', 'years_of_expre', 'description'), extra=6)
+    EmployeeFormSet = inlineformset_factory(Employee, Exprerience, fields=('domain', 'years_of_expre', 'description'), extra=1, can_delete = False)
     employee = Employee.objects.get(id=pk)
     formset = EmployeeFormSet(queryset=Exprerience.objects.none() ,instance=employee) # initialize formset here
 
@@ -153,7 +154,7 @@ def add_exprerience(request, pk):
         formset = EmployeeFormSet(request.POST, instance=employee) # update formset with POST data
         if formset.is_valid():
             formset.save()
-            return redirect('home')
+            return redirect('details',pk)
 
     context = {'formset': formset}
     return render(request, 'add_exp.html', context)
@@ -170,3 +171,11 @@ class Update_experience_view(UpdateView):
     model = Exprerience
     success_url = reverse_lazy('home')
 
+
+def get_user_experience(request, pk):
+    
+    expre = Exprerience.objects.get(id=pk)
+    context = {
+        'expre':expre
+    }
+    return render(request, 'display-exp.html', context)

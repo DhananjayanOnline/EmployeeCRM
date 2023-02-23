@@ -1,0 +1,21 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <div class="card border-0 shadow-sm p-3">
+            <h2 class="text-center">{{expre.emp_id.name}}</h2>
+            <p>Domain : {{expre.domain}}</p>
+            <p>Years of exprerience : {{expre.years_of_expre}}</p>
+            <p>Description : {{expre.description}}</p>
+        </div>
+        
+    </div>
+    <div class="col-2"></div>
+</div>
+
+
+
+{% endblock content %}

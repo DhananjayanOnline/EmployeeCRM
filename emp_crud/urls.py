@@ -14,6 +14,7 @@ urlpatterns = [
     path('emp/delete/<int:pk>', Delete_emp_view.as_view(), name='delete'),
     path('exp/delete/<int:pk>', Delete_experience.as_view(), name='delete-exp'),
     path('exp/add/<int:pk>', add_exprerience, name="addexp"),
+    path('exp/display/<int:pk>', get_user_experience, name="display-exp"),
     path('pdf', generate_pdf_view, name="pdf"),
 
 ] 

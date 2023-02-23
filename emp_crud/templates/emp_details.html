@@ -55,6 +55,7 @@
                         <th>Description
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
 
 
@@ -66,6 +67,7 @@
                         <td>{{exp.description}}</td>
                         <td><a href="{% url 'update-exp' exp.id %}" class="btn btn-outline-info btn-sm ">Edit</a></td>
                         <td><a href="{% url 'delete-exp' exp.id %}" class="btn btn-outline-danger btn-sm ">Delete</a>
+                        <td><a href="{% url 'display-exp' exp.id %}" class="btn btn-outline-warning btn-sm ">View</a></td>
                         </td>
                     </tr>
 
