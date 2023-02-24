@@ -122,8 +122,6 @@
 
                                         {{form.as_p}}
 
-                                        {{exp_form.as_p}}
-
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Close</button>
@@ -163,7 +161,7 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                                {% for emp in employees%}
+                                {% for emp in venues%}
                                 <tr>
                                     <td id="emp_photo{{emp.id}}"><img src="{{emp.imageURL}}" width="100%" height="70%"  style="object-fit: contain;" alt=""></td>
                                     <td id="emp_name{{emp.id}}">{{emp.username}}</td>
@@ -180,23 +178,26 @@
                             </tbody>
                         </table>
 
-                        dafdf
+                        <!-- pagination -->
 
-                        <div>
-                            <span>
-                                {% if employee.has_previous %}
-                                <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+
+                                {% if venues.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page=1">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{venues.previous_page_number}}">previous</a></li>
                                 {% endif %}
 
-                                <span>{{page_obj.number}}</span>
+                                <li class="page-item disabled"><a class="page-link" href="#"> Page {{venues.number}} of {{venues.paginator.num_pages}}</a></li>
 
-                                {% if employee.has_next %}
-                                <a href="?page={{page_obj.next_page_number}}">Next</a>
+                                {% if venues.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{venues.next_page_number}}">next </a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{venues.paginator.num_pages}}">&raquo;</a></li>
                                 {% endif %}
-
-                            </span>
-                        </div>
-
+                              
+                            </ul>
+                        </nav>
+                        
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ from django.db.models import Sum
 # Create your models here.
 
 class Employee(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     username = models.CharField(max_length=200, default='x')
     password = models.CharField(max_length=200, default='x')

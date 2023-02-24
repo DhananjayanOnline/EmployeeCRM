@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Employee, Exprerience
+from django.contrib.auth.models import User
 from .forms import Admin_creation_form, Admin_login_form, Employee_form, Exprerience_form, Employee_creation_form
 from django.views.generic import CreateView, FormView, TemplateView, ListView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
@@ -10,6 +11,7 @@ from django.contrib import messages
 from django.forms import inlineformset_factory
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 
 from django.http import FileResponse, HttpResponse
 from io import BytesIO
@@ -30,6 +32,19 @@ def signin_required(fn):
         else:
             return fn(request, *args, **kwargs)
     return wrapper
+
+def super_user(fn):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            messages.error(request, 'Access denied')
+            user = Employee.objects.get(user__username=request.user.username)
+            emp = user.id
+            return redirect('details', emp)
+        else:
+            return fn(request, *args, **kwargs)
+    return wrapper
+
+
 
 decs = [signin_required, never_cache]
 
@@ -52,50 +67,86 @@ class Login_view(FormView):
             pword = form.cleaned_data.get("password")
             usr = authenticate(request, username=uname, password=pword)
             if usr:
-                login(request, usr)
-                return redirect("home")
+                if usr.is_superuser:
+                    login(request, usr)
+                    return redirect("home")
+                else:
+                    user = Employee.objects.get(user__username=uname)
+                    emp = user.id
+                    login(request, usr)
+                    return redirect('details', emp)
             else:
                 messages.error(self.request,"Invalid Credentials")
                 return render(request, self.template_name, {"form":form})
 
 
-@method_decorator(decs, name="dispatch")
-class Index_view(CreateView, ListView, UserPassesTestMixin):
-    template_name = 'index.html'
-    form_class = Employee_creation_form
-    success_url = reverse_lazy('home')
-    context_object_name = 'employees'
-    object_list  = Employee.objects.all()
-    queryset = Employee.objects.all()
-    paginate_by = 2
+# @method_decorator(decs, name="dispatch")
+# class Index_view(CreateView, ListView, UserPassesTestMixin):
+#     template_name = 'index.html'
+#     form_class = Employee_creation_form
+#     success_url = reverse_lazy('home')
+#     context_object_name = 'employees'
+#     object_list  = Employee.objects.all()
+#     queryset = Employee.objects.all()
+#     paginate_by = 2
     
-    def form_valid(self, form):
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
+#     def form_valid(self, form):
+#         username = form.cleaned_data.get('username')
+#         password = form.cleaned_data.get('password1')
 
-        Employee.objects.create(username=username, password=password)
+#         Employee.objects.create(username=username, password=password)
 
-        user = form.save(commit=False)
-        user.save()
-        return super().form_valid(form)
+#         user = form.save(commit=False)
+#         user.save()
+#         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["emp_count"] = Employee.objects.all().count()
-        context["pro_dept_count"] = Employee.objects.filter(department="Product development").count()
-        context["sales_dept_count"] = Employee.objects.filter(department="Sales and marketing").count()
-        context["salary_sum"] = Employee.get_salary_sum()
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["emp_count"] = Employee.objects.all().count()
+#         context["pro_dept_count"] = Employee.objects.filter(department="Product development").count()
+#         context["sales_dept_count"] = Employee.objects.filter(department="Sales and marketing").count()
+#         context["salary_sum"] = Employee.get_salary_sum()
+#         return context
+
+@login_required(login_url='signin')
+@super_user
+@never_cache
+def index_view(request):
+
+    qs = Employee.objects.all()
+    if request.method == 'POST':
+        form = Employee_creation_form(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+
+            Employee.objects.create(user=user, username=username, password=password)
+    else:
+        form = Employee_creation_form()
+
+    # paginatoin
+    p = Paginator(Employee.objects.all(), 3)
+    page = request.GET.get('page')
+    venues = p.get_page(page)
 
 
-    def test_func(self):
-        # Check if the user is a superuser or a staff member
-        return self.request.user.is_superuser
+    context = {
+        'employees':qs,
+        'form':form,
+        'venues':venues
+    }
+    return render(request, 'index.html', context)
 
-    def handle_no_permission(self):
 
-        # Redirect to the login page if the user doesn't have the required permission
-        return redirect('details')
+    # def test_func(self):
+    #     # Check if the user is a superuser or a staff member
+    #     return self.request.user.is_superuser
+
+    # def handle_no_permission(self):
+
+    #     # Redirect to the login page if the user doesn't have the required permission
+    #     return redirect('details')
 
     
     

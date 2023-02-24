@@ -21,18 +21,18 @@ class Admin_login_form(forms.Form):
     password = forms.CharField()
 
 
-
 class Employee_creation_form(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2', 'is_staff']
 
-    widgets = {
+        widgets = {
             "username": forms.TextInput(attrs={"class": "form-control"}),
             "password1": forms.PasswordInput(attrs={"class": "form-control"}),
             "password2": forms.PasswordInput(attrs={"class": "form-control"}),
             "is_staff": forms.CheckboxInput(attrs={"class": "form-control"}),
         }
+
 
 
 class Employee_form(forms.ModelForm):
