@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Employee, Exprerience
+from .models import *
 from django.contrib.auth.models import User
 from .forms import Admin_creation_form, Admin_login_form, Employee_form, Exprerience_form, Employee_creation_form
 from django.views.generic import CreateView, FormView, TemplateView, ListView, UpdateView, DeleteView, DetailView
@@ -257,7 +257,7 @@ def export_users_xls(request):
 
 
 def add_exprerience(request, pk):
-    EmployeeFormSet = inlineformset_factory(Employee, Exprerience, fields=('domain', 'years_of_expre', 'description'), extra=1, can_delete = False)
+    EmployeeFormSet = inlineformset_factory(Employee, Exprerience, fields=('domain','skill', 'years_of_expre', 'description'), extra=1, can_delete = False)
     employee = Employee.objects.get(id=pk)
     formset = EmployeeFormSet(queryset=Exprerience.objects.none() ,instance=employee) # initialize formset here
 
@@ -269,6 +269,23 @@ def add_exprerience(request, pk):
 
     context = {'formset': formset}
     return render(request, 'add_exp.html', context)
+
+
+
+def add_exprerience_normalForm(request,pk):
+    emp = Employee.objects.get(id=pk)
+
+    form = Exprerience_form(initial={'emp_id':emp})
+
+    if request.method == 'POST':
+        form = Exprerience_form(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('details', pk)
+    
+    context = {'form':form}
+    return render(request, 'add_exp.html', context)
+
 
 
 class Delete_experience(DeleteView):
@@ -290,3 +307,16 @@ def get_user_experience(request, pk):
         'expre':expre
     }
     return render(request, 'display-exp.html', context)
+
+
+
+def load_cities(request):
+    domain_id = request.GET.get('domain_id')
+    skills = Skills.objects.filter(domain_id=domain_id).all()
+    return render(request, 'skill_dropdown_list_options.html', {'skills': skills})
+
+
+class List_admin(ListView):
+    model = User
+    queryset = User.objects.filter(is_superuser=True)
+    template_name = 'list-admins.html'

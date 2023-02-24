@@ -1,5 +1,5 @@
 from django import forms
-from .models import Employee, Exprerience
+from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -61,7 +61,22 @@ class Exprerience_form(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            "domain": forms.TextInput(attrs={"class":"form-control"}),
+            "domain": forms.Select(attrs={"class":"form-control"}),
+            "skill": forms.Select(attrs={"class":"form-control"}),
             "years_of_expre": forms.NumberInput(attrs={"class":"form-control"}),
             "description": forms.Textarea(attrs={"class":"form-control","rows": 2}),
         }
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['skill'].queryset = Skills.objects.none()
+
+        if 'domain' in self.data:
+            try:
+                domain_id = int(self.data.get('domain'))
+                self.fields['skill'].queryset = Skills.objects.filter(domain=domain_id).all()
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['skill'].queryset = self.instance.domain.skills_set.order_by('name')

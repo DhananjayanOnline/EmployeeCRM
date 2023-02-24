@@ -31,6 +31,9 @@ class Employee(models.Model):
     )
     status = models.CharField(max_length=100, choices=options, default='working', null=True, blank=True)
 
+    def __str__(self):
+        return self.username
+
     @classmethod
     def get_salary_sum(cls):
         return cls.objects.aggregate(Sum('salary'))['salary__sum']
@@ -42,12 +45,31 @@ class Employee(models.Model):
         else:
             return ""
 
+    
+
+class Domains(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
+class Skills(models.Model):
+    domain = models.ForeignKey(Domains, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
 
 class Exprerience(models.Model):
     emp_id = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    domain = models.CharField(max_length=200)
+    # domain = models.CharField(max_length=200)
+    domain = models.ForeignKey(Domains, on_delete=models.CASCADE)
+    skill = models.ForeignKey(Skills, on_delete=models.CASCADE, default=None)
     years_of_expre = models.IntegerField()
     description = models.TextField(max_length=400)
 
     def __self__(self):
         return self.emp_id.name
+

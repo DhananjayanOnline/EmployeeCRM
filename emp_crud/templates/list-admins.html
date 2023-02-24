@@ -1,0 +1,23 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <div class="card border-0 shadow-sm p-3">
+
+            {% for i in object_list %}
+
+            <p>{{i.username}}</p>
+
+            {% endfor %}
+        </div>
+        
+    </div>
+    <div class="col-2"></div>
+</div>
+
+
+
+{% endblock content %}
